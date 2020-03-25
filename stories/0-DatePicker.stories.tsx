@@ -11,17 +11,35 @@ export default {
   },
 };
 
-export const Calendar = () => (
-  <LocaleSelector>
-    {locale => (
-      <DatePicker locale={locale}>
-        <MonthPicker />
-        <Weekdays />
-        <DayGrid startDay={1} length={28} />
-      </DatePicker>
-    )}
-  </LocaleSelector>
-);
+export const Calendar = () => {
+  const [firstWeekday, setFirstWeekday] = useState<number>(0);
+  return (
+    <>
+      <LocaleSelector>
+        {locale => (
+          <DatePicker locale={locale} firstWeekday={firstWeekday}>
+            <MonthPicker />
+            <Weekdays />
+            <DayGrid startDay={1} length={28} />
+          </DatePicker>
+        )}
+      </LocaleSelector>
+      <div>
+        <label>
+          First weekday
+          <br />
+          <input
+            type="range"
+            min="0"
+            max="6"
+            value={firstWeekday}
+            onChange={event => setFirstWeekday(Number(event.target.value))}
+          />
+        </label>
+      </div>
+    </>
+  );
+};
 
 export const WeekdaysLocale = () => (
   <>

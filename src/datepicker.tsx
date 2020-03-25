@@ -1,4 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useLayoutEffect,
+} from 'react';
 import objstr from 'obj-str';
 import VisuallyHidden from '@reach/visually-hidden';
 import './grid.css';
@@ -90,22 +95,18 @@ interface DayGridProps {
 export function DayGrid({ startDay, dir = 'ltr' }: DayGridProps) {
   let { day, setDay, month, year, weekStart, locale } = useDatePickerContext();
 
-  // NOTE: first day returns 0-6 and and assumes 0 is sunday
+  // NOTE: first day returns 0-6 and and assumes 0 is sunday, so we convert it to start on monday, then apply the weekstart
   const firstDay =
     mod(mod(getFirstDayOfMonth(year, month) + 6, 7) - weekStart, 7) + 1;
-  console.log('mod', mod(6, 7));
-  // ((((getFirstDayOfMonth(year, month) - 6 + weekStart) % 7) + 7) % 7) + 1;
-  console.log('first day', firstDay);
 
   const monthLength = getDaysInMonth(year, month + 1);
 
-  // var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  // var dateTimeFormat = new Intl.DateTimeFormat('sr-RS', options);
   const dayFormat = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     timeZone: 'UTC',
   });
 
+  // The .replace removes the 日 chinese and japanese locales, which get added by our number formatter. It's not the cleanest solution but for now it requires the least amount of data, and should support every locale (we need to write a test case).
   return (
     <div
       className="date-picker__grid"
@@ -127,7 +128,9 @@ export function DayGrid({ startDay, dir = 'ltr' }: DayGridProps) {
               onClick={() => setDay(itemDay)}
             >
               <time>
-                {dayFormat.format(new Date(`2020-${month + 1}-${itemDay}`))}
+                {dayFormat
+                  .format(new Date(`2020-${month + 1}-${itemDay}`))
+                  .replace(/^\d\d?.$/, itemDay.toString())}
               </time>
             </button>
           );
@@ -138,13 +141,21 @@ export function DayGrid({ startDay, dir = 'ltr' }: DayGridProps) {
 
 interface DatePickerProps {
   children: React.ReactNode;
+  firstWeekday?: number;
   locale?: string;
 }
-export function DatePicker({ locale = 'en', children }: DatePickerProps) {
+export function DatePicker({
+  locale = 'en',
+  firstWeekday = 6,
+  children,
+}: DatePickerProps) {
   const [day, setDay] = useState<number>(1);
   const [month, setMonth] = useState<number>(0);
   const [year, setYear] = useState<number>(2020);
-  const [weekStart] = useState<number>(0);
+  const [weekStart, setWeekStart] = useState<number>(firstWeekday);
+  useLayoutEffect(() => {
+    setWeekStart(firstWeekday);
+  }, [firstWeekday]);
 
   // TODO Set weekStart based on locale
   // Also have an option weekStart if user does not want to include locale information?
