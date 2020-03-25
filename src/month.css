@@ -1,0 +1,23 @@
+.date-picker__month {
+  display: flex;
+  justify-content: space-between;
+
+  margin: 30px 0;
+}
+
+.date-picker__month button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: initial;
+  -webkit-appearance: none;
+}
+
+.date-picker__month button img,
+.date-picker__month button svg {
+  width: 24px;
+  vertical-align: middle;
+}

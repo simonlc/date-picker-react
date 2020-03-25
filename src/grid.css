@@ -1,0 +1,71 @@
+.date-picker__weekdays,
+.date-picker__grid {
+  --gap: 10px;
+  display: grid;
+  grid-gap: var(--gap);
+  grid-template-columns: repeat(7, 1fr);
+  width: 320px;
+}
+
+.date-picker__weekdays {
+  align-items: center;
+  justify-items: center;
+  margin-bottom: var(--gap);
+}
+
+.date-picker__grid button:first-child {
+  grid-column: var(--start-day, 1);
+}
+
+.date-picker__grid__item {
+  /* button reset */
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+  border: initial;
+  -webkit-appearance: none;
+
+  /* Custom styles */
+  display: flex;
+  background: white;
+  border: 1px solid black;
+  align-items: center;
+  justify-content: center;
+  /*
+  background-image: linear-gradient(
+    45deg,
+    transparent 50%,
+    rgba(0, 0, 0, 0.5) 50%
+  );
+  */
+}
+
+.date-picker__grid__item::before {
+  content: '';
+  padding-bottom: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.date-picker__grid__item:hover,
+.date-picker__grid__item:focus {
+  background: #f7f7f7;
+}
+
+.date-picker__grid__item:focus {
+  /* outline: 1px solid #fff; */
+}
+
+.date-picker__grid__item:active {
+  transform: scale(0.99);
+}
+
+.date-picker__grid__item:disabled {
+}
+
+.date-picker__grid__item--selected {
+  background: lightblue;
+}
