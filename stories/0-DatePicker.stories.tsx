@@ -83,37 +83,9 @@ export const WeekdaysLocale = () => (
 );
 
 export const Grid = () => {
-  const [startDay, setStartDay] = useState<number>(1);
-  const [length, setLength] = useState<number>(30);
   return (
     <DatePicker>
-      <DayGrid startDay={startDay} length={length} />
-      <div>
-        <label>
-          Month length
-          <br />
-          <input
-            type="range"
-            min="28"
-            max="31"
-            value={length}
-            onChange={event => setLength(Number(event.target.value))}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Start day
-          <br />
-          <input
-            type="range"
-            min="1"
-            max="7"
-            value={startDay}
-            onChange={event => setStartDay(Number(event.target.value))}
-          />
-        </label>
-      </div>
+      <DayGrid />
     </DatePicker>
   );
 };
@@ -121,7 +93,7 @@ export const Grid = () => {
 export const RtlGrid = () => {
   return (
     <DatePicker>
-      <DayGrid startDay={3} length={31} dir="rtl" />
+      <DayGrid dir="rtl" />
     </DatePicker>
   );
 };
