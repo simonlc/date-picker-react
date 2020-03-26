@@ -42,6 +42,7 @@ export function Weekdays() {
   const weekdays = [...Array(7).keys()].map(index =>
     new Intl.DateTimeFormat(locale, {
       weekday: 'short',
+      // weekday: 'narrow',
       timeZone: 'UTC',
       // This date is just a reference to a known weekday that starts on monday
     }).format(Date.UTC(2018, 0, index + weekStart + 1)),
@@ -164,7 +165,7 @@ export function DatePicker({
     <DatePickerProvider
       value={{ day, setDay, month, setMonth, year, setYear, weekStart, locale }}
     >
-      {children}
+      <div className="date-picker">{children}</div>
     </DatePickerProvider>
   );
 }
