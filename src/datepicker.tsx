@@ -57,25 +57,32 @@ export function Weekdays() {
   );
 }
 
-interface MonthPickerRenderProps {
+interface YearMonthNavRenderProps {
   month: number;
   setMonth: React.Dispatch<React.SetStateAction<number>>;
   year: number;
   setYear: React.Dispatch<React.SetStateAction<number>>;
   locale: string;
 }
-interface MonthPickerProps {
-  children?: (renderProps: MonthPickerRenderProps) => React.ReactNode;
+interface YearMonthNavProps {
+  children?: (renderProps: YearMonthNavRenderProps) => React.ReactNode;
 }
-export function MonthPicker({ children }: MonthPickerProps) {
+export function YearMonthNav({ children }: YearMonthNavProps) {
   let { month, setMonth, year, setYear, locale } = useDatePickerContext();
   const monthYear = new Intl.DateTimeFormat(locale, {
     month: 'long',
+    year: 'numeric',
     timeZone: 'UTC',
   }).format(Date.UTC(year, month));
 
-  // TODO Change year
-  const setMonthLoop = (month: number) => setMonth(mod(month, 12));
+  const setMonthLoop = (month: number) => {
+    if (month >= 12) {
+      setYear(year => year + 1);
+    } else if (month < 0) {
+      setYear(year => year - 1);
+    }
+    setMonth(mod(month, 12));
+  };
 
   return (
     <div className="date-picker__month">

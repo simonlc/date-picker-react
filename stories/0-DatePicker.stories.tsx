@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import { action } from '@storybook/addon-actions';
-import { DatePicker, DayGrid, Weekdays, MonthPicker } from '../src/datepicker';
+import { DatePicker, DayGrid, Weekdays, YearMonthNav } from '../src/datepicker';
 import { LocaleSelector } from '../src/locale-selector';
 
 export default {
@@ -18,7 +18,7 @@ export const Calendar = () => {
       <LocaleSelector>
         {locale => (
           <DatePicker locale={locale} firstWeekday={firstWeekday}>
-            <MonthPicker />
+            <YearMonthNav />
             <Weekdays />
             <DayGrid />
           </DatePicker>
