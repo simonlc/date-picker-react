@@ -23,8 +23,8 @@ function createCtx<A>() {
 }
 
 interface DatePickerProviderValue {
-  day: number;
-  setDay: React.Dispatch<React.SetStateAction<number>>;
+  date: string | null;
+  setDate: React.Dispatch<React.SetStateAction<string>>;
   month: number;
   setMonth: React.Dispatch<React.SetStateAction<number>>;
   year: number;
@@ -78,9 +78,9 @@ export function YearMonthNav({ children }: YearMonthNavProps) {
     .map(({ type, value }) => {
       switch (type) {
         case 'month':
-          return <b>{value}</b>;
+          return <b key={type}>{value}</b>;
         default:
-          return value;
+          return <React.Fragment key={type}>{value}</React.Fragment>;
       }
     })
     .reduce((array, part) => [...array, part], []);
@@ -121,7 +121,14 @@ interface DayGridProps {
   dir?: 'ltr' | 'rtl';
 }
 export function DayGrid({ dir = 'ltr' }: DayGridProps) {
-  let { day, setDay, month, year, weekStart, locale } = useDatePickerContext();
+  let {
+    date,
+    setDate,
+    month,
+    year,
+    weekStart,
+    locale,
+  } = useDatePickerContext();
 
   // NOTE: first day returns 0-6 and and assumes 0 is sunday, so we convert it to start on monday, then apply the weekstart
   const firstDay =
@@ -149,11 +156,12 @@ export function DayGrid({ dir = 'ltr' }: DayGridProps) {
             <button
               className={objstr({
                 'date-picker__grid__item': true,
-                'date-picker__grid__item--selected': day === itemDay,
+                'date-picker__grid__item--selected':
+                  date === `${year}-${month}-${itemDay}`,
               })}
               key={index}
               type="button"
-              onClick={() => setDay(itemDay)}
+              onClick={() => setDate(`${year}-${month}-${itemDay}`)}
             >
               <time>
                 {dayFormat
@@ -182,7 +190,7 @@ export function DatePicker({
   firstWeekday = 6,
   children,
 }: DatePickerProps) {
-  const [day, setDay] = useState<number>(1);
+  const [date, setDate] = useState<string | null>(null);
   const [month, setMonth] = useState<number>(0);
   const [year, setYear] = useState<number>(2020);
   const [weekStart, setWeekStart] = useState<number>(firstWeekday);
@@ -195,7 +203,16 @@ export function DatePicker({
 
   return (
     <DatePickerProvider
-      value={{ day, setDay, month, setMonth, year, setYear, weekStart, locale }}
+      value={{
+        date,
+        setDate,
+        month,
+        setMonth,
+        year,
+        setYear,
+        weekStart,
+        locale,
+      }}
     >
       <div className="date-picker">{children}</div>
     </DatePickerProvider>
