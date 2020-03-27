@@ -57,14 +57,22 @@ export function Weekdays() {
   );
 }
 
-export function MonthPicker() {
-  let { month, setMonth, locale } = useDatePickerContext();
-  const months = [...Array(12).keys()].map(index =>
-    new Intl.DateTimeFormat(locale, {
-      month: 'long',
-      timeZone: 'UTC',
-    }).format(Date.UTC(2018, index)),
-  );
+interface MonthPickerRenderProps {
+  month: number;
+  setMonth: React.Dispatch<React.SetStateAction<number>>;
+  year: number;
+  setYear: React.Dispatch<React.SetStateAction<number>>;
+  locale: string;
+}
+interface MonthPickerProps {
+  children?: (renderProps: MonthPickerRenderProps) => React.ReactNode;
+}
+export function MonthPicker({ children }: MonthPickerProps) {
+  let { month, setMonth, year, setYear, locale } = useDatePickerContext();
+  const monthYear = new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    timeZone: 'UTC',
+  }).format(Date.UTC(year, month));
 
   // TODO Change year
   const setMonthLoop = (month: number) => setMonth(mod(month, 12));
@@ -77,7 +85,9 @@ export function MonthPicker() {
           <path d="M336 275L126 485h806c13 0 23 10 23 23s-10 23-23 23H126l210 210c11 11 11 21 0 32-5 5-10 7-16 7s-11-2-16-7L55 524c-11-11-11-21 0-32l249-249c21-22 53 10 32 32z" />
         </svg>
       </button>
-      {months[month]}
+      {children
+        ? children({ month, year, setMonth, setYear, locale })
+        : monthYear}
       <button type="button" onClick={() => setMonthLoop(month + 1)}>
         <VisuallyHidden>Next month</VisuallyHidden>
         <svg focusable="false" viewBox="0 0 1000 1000" aria-hidden>
@@ -89,11 +99,9 @@ export function MonthPicker() {
 }
 
 interface DayGridProps {
-  startDay: number;
-  length: number;
   dir?: 'ltr' | 'rtl';
 }
-export function DayGrid({ startDay, dir = 'ltr' }: DayGridProps) {
+export function DayGrid({ dir = 'ltr' }: DayGridProps) {
   let { day, setDay, month, year, weekStart, locale } = useDatePickerContext();
 
   // NOTE: first day returns 0-6 and and assumes 0 is sunday, so we convert it to start on monday, then apply the weekstart
@@ -138,6 +146,11 @@ export function DayGrid({ startDay, dir = 'ltr' }: DayGridProps) {
         })}
     </div>
   );
+}
+
+export function WeekGrid() {
+  // Displays a single row of what DayGrid would show
+  return 'TODO';
 }
 
 interface DatePickerProps {

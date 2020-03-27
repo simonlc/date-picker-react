@@ -20,7 +20,7 @@ export const Calendar = () => {
           <DatePicker locale={locale} firstWeekday={firstWeekday}>
             <MonthPicker />
             <Weekdays />
-            <DayGrid startDay={1} length={28} />
+            <DayGrid />
           </DatePicker>
         )}
       </LocaleSelector>
