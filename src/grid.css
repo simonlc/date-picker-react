@@ -74,7 +74,7 @@
 .date-picker__grid__item:focus {
   /* outline: 1px solid #fff; */
   outline: 0;
-  border: 2px solid black;
+  box-shadow: 0 0 4px 1px #115bb7;
 }
 
 .date-picker__grid__item:active {
@@ -85,12 +85,13 @@
 }
 
 .date-picker__grid__item--selected {
-  background: #ffc107;
+  background: #ff4684;
+  color: white;
   font-weight: bold;
 }
 .date-picker__grid__item--selected:focus {
-  background: #ffc107;
+  background: #ff4684;
 }
 .date-picker__grid__item--selected:hover {
-  background: #ffc107;
+  background: #ff4684;
 }
