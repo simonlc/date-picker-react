@@ -25,6 +25,7 @@ export function LocaleSelector({ children }: LocaleSelectorProps) {
         <option value="en">English</option>
         <option value="en-GB">English (Great Britain)</option>
         <option value="en-US">English (USA)</option>
+        <option value="en-CA">English (Canada)</option>
         <option value="es">Spanish</option>
         <option value="es-419">Spanish (Latin America and Caribbean)</option>
         <option value="et">Estonian</option>
@@ -32,6 +33,7 @@ export function LocaleSelector({ children }: LocaleSelectorProps) {
         <option value="fi">Finnish</option>
         <option value="fil">Filipino</option>
         <option value="fr">French</option>
+        <option value="fr-CA">French (Canada)</option>
         <option value="gu">Gujarati</option>
         <option value="he">Hebrew</option>
         <option value="hi">Hindi</option>
