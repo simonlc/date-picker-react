@@ -36,14 +36,20 @@ export const [useDatePickerContext, DatePickerProvider] = createCtx<
   DatePickerProviderValue
 >();
 
-export function Weekdays() {
+interface WeekdaysFormatOptions {
+  weekday: 'short' | 'narrow' | 'long';
+}
+interface WeekdaysProps {
+  options?: WeekdaysFormatOptions;
+}
+export function Weekdays({ options }: WeekdaysProps) {
   let { weekStart, locale } = useDatePickerContext();
 
   const weekdays = [...Array(7).keys()].map(index =>
     new Intl.DateTimeFormat(locale, {
-      weekday: 'short',
-      // weekday: 'narrow',
       timeZone: 'UTC',
+      weekday: 'short',
+      ...options,
       // This date is just a reference to a known weekday that starts on monday
     }).format(Date.UTC(2018, 0, index + weekStart + 1)),
   );
