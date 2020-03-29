@@ -129,36 +129,77 @@ export function YearMonthNav({ children }: YearMonthNavProps) {
   );
 }
 
-interface DayGridProps {
-  dir?: 'ltr' | 'rtl';
-  showCompleteWeeks?: boolean;
+interface DayProps {
+  length: number;
+  datePart: string;
+  className?: any;
+  onClick?: any;
+  dayOffset?: number;
 }
-export function DayGrid({ showCompleteWeeks, dir = 'ltr' }: DayGridProps) {
-  let {
-    date,
-    setDate,
-    month,
-    setMonth,
-    year,
-    weekStart,
-    locale,
-  } = useDatePickerContext();
-
-  // NOTE: first day returns 0-6 and and assumes 0 is sunday, so we convert it to start on monday, then apply the weekstart
-  const firstDay =
-    mod(mod(getFirstDayOfMonth(year, month) + 6, 7) - weekStart, 7) + 1;
-
-  const monthLength = getDaysInMonth(year, month + 1);
-  const lastMonthLength = getDaysInMonth(
-    month === 0 ? year - 1 : year,
-    mod(month - 1, 12) + 1,
-  );
-  const restDaysEnd = (7 - ((monthLength + firstDay - 1) % 7)) % 7;
+function Day({
+  length,
+  className,
+  datePart,
+  onClick,
+  dayOffset = 0,
+}: DayProps) {
+  let { date: selectedDate, setDate, locale } = useDatePickerContext();
 
   const dayFormat = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     timeZone: 'UTC',
   });
+
+  return (
+    <>
+      {Array(length)
+        .fill(0)
+        .map((_, index) => {
+          const day = dayOffset + index + 1;
+          const date = datePart + day;
+          return (
+            <button
+              className={objstr({
+                'date-picker__grid__item': true,
+                'date-picker__grid__item--selected': date === selectedDate,
+                ...className,
+              })}
+              key={index}
+              type="button"
+              onClick={() => {
+                setDate(date);
+                onClick && onClick();
+              }}
+            >
+              <time>
+                {dayFormat
+                  .format(new Date(date))
+                  .replace(/^\d\d?.$/, day.toString())}
+              </time>
+            </button>
+          );
+        })}
+    </>
+  );
+}
+
+interface DayGridProps {
+  dir?: 'ltr' | 'rtl';
+  showCompleteWeeks?: boolean;
+}
+export function DayGrid({ showCompleteWeeks, dir = 'ltr' }: DayGridProps) {
+  let { month, setMonth, year, weekStart } = useDatePickerContext();
+
+  // NOTE: first day returns 0-6 and and assumes 0 is sunday, so we convert it to start on monday, then apply the weekstart
+  const firstDay =
+    mod(mod(getFirstDayOfMonth(year, month) + 6, 7) - weekStart, 7) + 1;
+
+  const lastMonthLength = getDaysInMonth(
+    month === 0 ? year - 1 : year,
+    mod(month - 1, 12) + 1,
+  );
+  const monthLength = getDaysInMonth(year, month + 1);
+  const restDaysEnd = (7 - ((monthLength + firstDay - 1) % 7)) % 7;
 
   // The .replace removes the 日 chinese and japanese locales, which get added by our number formatter. It's not the cleanest solution but for now it requires the least amount of data, and should support every locale (we need to write a test case).
   return (
@@ -171,106 +212,31 @@ export function DayGrid({ showCompleteWeeks, dir = 'ltr' }: DayGridProps) {
       }
       dir={dir}
     >
-      {showCompleteWeeks &&
-        Array(firstDay - 1)
-          .fill(0)
-          .map((_, index) => {
-            const itemDay = lastMonthLength - firstDay + 1 + index + 1;
-            return (
-              <button
-                className={objstr({
-                  'date-picker__grid__item': true,
-                  'date-picker__grid__item--rest-day': true,
-                  'date-picker__grid__item--selected':
-                    date ===
-                    `${month === 0 ? year - 1 : year}-${mod(month - 1, 12) +
-                      1}-${itemDay}`,
-                })}
-                key={index}
-                type="button"
-                onClick={() =>
-                  setDate(
-                    `${month === 0 ? year - 1 : year}-${mod(month - 1, 12) +
-                      1}-${itemDay}`,
-                  )
-                }
-              >
-                <time>
-                  {dayFormat
-                    .format(
-                      new Date(
-                        `${month === 0 ? year - 1 : year}-${mod(month - 1, 12) +
-                          1}-${itemDay}`,
-                      ),
-                    )
-                    .replace(/^\d\d?.$/, itemDay.toString())}
-                </time>
-              </button>
-            );
-          })}
-      {Array(monthLength)
-        .fill(0)
-        .map((_, index) => {
-          const itemDay = index + 1;
-          return (
-            <button
-              className={objstr({
-                'date-picker__grid__item': true,
-                'date-picker__grid__item--selected':
-                  date === `${year}-${month + 1}-${itemDay}`,
-              })}
-              key={index}
-              type="button"
-              onClick={() => setDate(`${year}-${month + 1}-${itemDay}`)}
-            >
-              <time>
-                {dayFormat
-                  .format(new Date(`${year}-${month + 1}-${itemDay}`))
-                  .replace(/^\d\d?.$/, itemDay.toString())}
-              </time>
-            </button>
-          );
-        })}
-      {showCompleteWeeks &&
-        Array(restDaysEnd)
-          .fill(0)
-          .map((_, index) => {
-            const itemDay = index + 1;
-            return (
-              <button
-                className={objstr({
-                  'date-picker__grid__item': true,
-                  'date-picker__grid__item--rest-day': true,
-                  'date-picker__grid__item--selected':
-                    date ===
-                    `${month === 11 ? year + 1 : year}-${mod(month + 1, 12) +
-                      1}-${itemDay}`,
-                })}
-                key={index}
-                type="button"
-                onClick={() => {
-                  setDate(
-                    `${month === 11 ? year + 1 : year}-${mod(month + 1, 12) +
-                      1}-${itemDay}`,
-                  );
-                  setMonth(mod(month + 1, 12));
-                }}
-              >
-                <time>
-                  {dayFormat
-                    .format(
-                      new Date(
-                        `${month === 11 ? year + 1 : year}-${mod(
-                          month + 1,
-                          12,
-                        ) + 1}-${itemDay}`,
-                      ),
-                    )
-                    .replace(/^\d\d?.$/, itemDay.toString())}
-                </time>
-              </button>
-            );
-          })}
+      {showCompleteWeeks && (
+        <Day
+          length={firstDay - 1}
+          className={{
+            'date-picker__grid__item--rest-day': true,
+          }}
+          dayOffset={lastMonthLength - firstDay + 1}
+          datePart={`${month === 0 ? year - 1 : year}-${mod(month - 1, 12) +
+            1}-`}
+        />
+      )}
+      <Day length={monthLength} datePart={`${year}-${month + 1}-`} />
+      {showCompleteWeeks && (
+        <Day
+          length={restDaysEnd}
+          className={{
+            'date-picker__grid__item--rest-day': true,
+          }}
+          datePart={`${month === 11 ? year + 1 : year}-${mod(month + 1, 12) +
+            1}-`}
+          onClick={() => {
+            setMonth(mod(month + 1, 12));
+          }}
+        />
+      )}
     </div>
   );
 }
