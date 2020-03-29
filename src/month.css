@@ -20,7 +20,15 @@
   cursor: pointer;
   color: var(--color);
   background: var(--background);
+  transition: background 0.1s cubic-bezier(0, 0, 1, 1);
+  border-radius: 8px;
 }
+
+.date-picker__month button:hover {
+  background: var(--shade-01);
+  transition: background 0.1s cubic-bezier(0, 0, 1, 1);
+}
+
 .date-picker__month button svg path {
   stroke: var(--color);
 }
