@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // import { action } from '@storybook/addon-actions';
 import { DatePicker, DayGrid, Weekdays, YearMonthNav } from '../src/datepicker';
 import { LocaleSelector } from '../src/locale-selector';
+import './stories.css';
 
 export default {
   title: 'DatePicker',

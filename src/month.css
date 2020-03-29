@@ -29,6 +29,11 @@
   transition: background 0.1s cubic-bezier(0, 0, 1, 1);
 }
 
+.date-picker__month button:focus {
+  outline: 0;
+  box-shadow: var(--box-shadow-focus);
+}
+
 .date-picker__month button svg path {
   stroke: var(--color);
 }
