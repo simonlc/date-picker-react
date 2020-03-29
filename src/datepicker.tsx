@@ -67,7 +67,6 @@ function Arrow(props: any) {
   return (
     <svg focusable="false" viewBox="0 0 32 32" aria-hidden {...props}>
       <g stroke="#000" strokeWidth="2" fill="none" strokeLinecap="round">
-        strokeLinejoin="round"
         <path d="M10 6L2 16l8 10M2 16h28" />
       </g>
     </svg>
@@ -86,7 +85,7 @@ interface YearMonthNavProps {
 }
 export function YearMonthNav({
   children,
-  format = i => i,
+  format = ({ value }) => <React.Fragment key={value}>{value}</React.Fragment>,
   options,
 }: YearMonthNavProps) {
   let { month, setMonth, year, setYear, locale } = useDatePickerContext();
