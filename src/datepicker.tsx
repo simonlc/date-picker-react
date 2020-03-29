@@ -48,7 +48,7 @@ export function Weekdays({ options }: WeekdaysProps) {
   const weekdays = [...Array(7).keys()].map(index =>
     new Intl.DateTimeFormat(locale, {
       timeZone: 'UTC',
-      weekday: 'short',
+      weekday: 'narrow',
       ...options,
       // This date is just a reference to a known weekday that starts on monday
     }).format(Date.UTC(2018, 0, index + weekStart + 1)),
@@ -56,8 +56,8 @@ export function Weekdays({ options }: WeekdaysProps) {
 
   return (
     <div className="date-picker__weekdays">
-      {weekdays.map((day: string) => (
-        <span key={day}>{day}</span>
+      {weekdays.map((day: string, index: number) => (
+        <span key={index}>{day}</span>
       ))}
     </div>
   );
@@ -94,9 +94,9 @@ export function YearMonthNav({ children }: YearMonthNavProps) {
     .map(({ type, value }) => {
       switch (type) {
         case 'month':
-          return <b key={type}>{value}</b>;
+          return <b key={value}>{value}</b>;
         default:
-          return <React.Fragment key={type}>{value}</React.Fragment>;
+          return <React.Fragment key={value}>{value}</React.Fragment>;
       }
     })
     .reduce((array, part) => [...array, part], []);
@@ -131,12 +131,14 @@ export function YearMonthNav({ children }: YearMonthNavProps) {
 
 interface DayGridProps {
   dir?: 'ltr' | 'rtl';
+  showCompleteWeeks?: boolean;
 }
-export function DayGrid({ dir = 'ltr' }: DayGridProps) {
+export function DayGrid({ showCompleteWeeks, dir = 'ltr' }: DayGridProps) {
   let {
     date,
     setDate,
     month,
+    setMonth,
     year,
     weekStart,
     locale,
@@ -147,6 +149,11 @@ export function DayGrid({ dir = 'ltr' }: DayGridProps) {
     mod(mod(getFirstDayOfMonth(year, month) + 6, 7) - weekStart, 7) + 1;
 
   const monthLength = getDaysInMonth(year, month + 1);
+  const lastMonthLength = getDaysInMonth(
+    month === 0 ? year - 1 : year,
+    mod(month - 1, 12) + 1,
+  );
+  const restDaysEnd = (7 - ((monthLength + firstDay - 1) % 7)) % 7;
 
   const dayFormat = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
@@ -157,9 +164,50 @@ export function DayGrid({ dir = 'ltr' }: DayGridProps) {
   return (
     <div
       className="date-picker__grid"
-      style={{ '--start-day': firstDay } as React.CSSProperties}
+      style={
+        {
+          '--start-day': showCompleteWeeks ? 1 : firstDay,
+        } as React.CSSProperties
+      }
       dir={dir}
     >
+      {showCompleteWeeks &&
+        Array(firstDay - 1)
+          .fill(0)
+          .map((_, index) => {
+            const itemDay = lastMonthLength - firstDay + 1 + index + 1;
+            return (
+              <button
+                className={objstr({
+                  'date-picker__grid__item': true,
+                  'date-picker__grid__item--rest-day': true,
+                  'date-picker__grid__item--selected':
+                    date ===
+                    `${month === 0 ? year - 1 : year}-${mod(month - 1, 12) +
+                      1}-${itemDay}`,
+                })}
+                key={index}
+                type="button"
+                onClick={() =>
+                  setDate(
+                    `${month === 0 ? year - 1 : year}-${mod(month - 1, 12) +
+                      1}-${itemDay}`,
+                  )
+                }
+              >
+                <time>
+                  {dayFormat
+                    .format(
+                      new Date(
+                        `${month === 0 ? year - 1 : year}-${mod(month - 1, 12) +
+                          1}-${itemDay}`,
+                      ),
+                    )
+                    .replace(/^\d\d?.$/, itemDay.toString())}
+                </time>
+              </button>
+            );
+          })}
       {Array(monthLength)
         .fill(0)
         .map((_, index) => {
@@ -169,20 +217,60 @@ export function DayGrid({ dir = 'ltr' }: DayGridProps) {
               className={objstr({
                 'date-picker__grid__item': true,
                 'date-picker__grid__item--selected':
-                  date === `${year}-${month}-${itemDay}`,
+                  date === `${year}-${month + 1}-${itemDay}`,
               })}
               key={index}
               type="button"
-              onClick={() => setDate(`${year}-${month}-${itemDay}`)}
+              onClick={() => setDate(`${year}-${month + 1}-${itemDay}`)}
             >
               <time>
                 {dayFormat
-                  .format(new Date(`2020-${month + 1}-${itemDay}`))
+                  .format(new Date(`${year}-${month + 1}-${itemDay}`))
                   .replace(/^\d\d?.$/, itemDay.toString())}
               </time>
             </button>
           );
         })}
+      {showCompleteWeeks &&
+        Array(restDaysEnd)
+          .fill(0)
+          .map((_, index) => {
+            const itemDay = index + 1;
+            return (
+              <button
+                className={objstr({
+                  'date-picker__grid__item': true,
+                  'date-picker__grid__item--rest-day': true,
+                  'date-picker__grid__item--selected':
+                    date ===
+                    `${month === 11 ? year + 1 : year}-${mod(month + 1, 12) +
+                      1}-${itemDay}`,
+                })}
+                key={index}
+                type="button"
+                onClick={() => {
+                  setDate(
+                    `${month === 11 ? year + 1 : year}-${mod(month + 1, 12) +
+                      1}-${itemDay}`,
+                  );
+                  setMonth(mod(month + 1, 12));
+                }}
+              >
+                <time>
+                  {dayFormat
+                    .format(
+                      new Date(
+                        `${month === 11 ? year + 1 : year}-${mod(
+                          month + 1,
+                          12,
+                        ) + 1}-${itemDay}`,
+                      ),
+                    )
+                    .replace(/^\d\d?.$/, itemDay.toString())}
+                </time>
+              </button>
+            );
+          })}
     </div>
   );
 }
@@ -226,7 +314,7 @@ export function DatePicker({
         locale,
       }}
     >
-      <div className="date-picker">{children}</div>
+      <div className="date-picker dark">{children}</div>
     </DatePickerProvider>
   );
 }

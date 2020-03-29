@@ -18,6 +18,11 @@
 
   padding: 8px;
   cursor: pointer;
+  color: var(--color);
+  background: var(--background);
+}
+.date-picker__month button svg path {
+  stroke: var(--color);
 }
 
 .date-picker__month button img,

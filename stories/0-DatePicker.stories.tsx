@@ -13,6 +13,7 @@ export default {
 
 export const Calendar = () => {
   const [firstWeekday, setFirstWeekday] = useState<number>(0);
+  const [showCompleteWeeks, setShowCompleteWeeks] = useState<boolean>(true);
   return (
     <>
       <LocaleSelector>
@@ -20,7 +21,7 @@ export const Calendar = () => {
           <DatePicker locale={locale} firstWeekday={firstWeekday}>
             <YearMonthNav />
             <Weekdays />
-            <DayGrid />
+            <DayGrid showCompleteWeeks={showCompleteWeeks} />
           </DatePicker>
         )}
       </LocaleSelector>
@@ -34,6 +35,16 @@ export const Calendar = () => {
             max="6"
             value={firstWeekday}
             onChange={event => setFirstWeekday(Number(event.target.value))}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Show complete weeks
+          <input
+            checked={showCompleteWeeks}
+            onChange={() => setShowCompleteWeeks(state => !state)}
+            type="checkbox"
           />
         </label>
       </div>
