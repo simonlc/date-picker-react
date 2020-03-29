@@ -26,6 +26,7 @@
   border-radius: 8px;
   background: var(--background);
   color: var(--color);
+  width: 320px;
 }
 
 .date-picker *:focus:not(:focus-visible) {
@@ -38,7 +39,6 @@
   display: grid;
   grid-gap: var(--gap);
   grid-template-columns: repeat(7, 1fr);
-  width: 320px;
 }
 
 .date-picker__weekdays {

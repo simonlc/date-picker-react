@@ -65,40 +65,39 @@ export function Weekdays({ options }: WeekdaysProps) {
 
 function Arrow(props: any) {
   return (
-    <svg focusable="false" viewBox="0 0 24 24" {...props}>
-      <g stroke="#000" strokeWidth="1.25" fill="none" strokeLinecap="round">
-        <path d="M.625 12H22M23.35 12L17.5 5.5M23.35 12l-5.85 6.5" />
+    <svg focusable="false" viewBox="0 0 32 32" aria-hidden {...props}>
+      <g stroke="#000" strokeWidth="2" fill="none" strokeLinecap="round">
+        strokeLinejoin="round"
+        <path d="M10 6L2 16l8 10M2 16h28" />
       </g>
     </svg>
   );
 }
 
 interface YearMonthNavRenderProps {
-  month: number;
-  setMonth: React.Dispatch<React.SetStateAction<number>>;
-  year: number;
-  setYear: React.Dispatch<React.SetStateAction<number>>;
-  locale: string;
+  nextMonth: () => void;
+  prevMonth: () => void;
+  formatedDate: React.ReactNode[];
 }
 interface YearMonthNavProps {
   children?: (renderProps: YearMonthNavRenderProps) => React.ReactNode;
+  format?: ({ type, value }: { type: string; value: string }) => any;
+  options?: any;
 }
-export function YearMonthNav({ children }: YearMonthNavProps) {
+export function YearMonthNav({
+  children,
+  format = i => i,
+  options,
+}: YearMonthNavProps) {
   let { month, setMonth, year, setYear, locale } = useDatePickerContext();
-  const monthYear = new Intl.DateTimeFormat(locale, {
+  const formatedDate = new Intl.DateTimeFormat(locale, {
     month: 'long',
     year: 'numeric',
     timeZone: 'UTC',
+    ...options,
   })
     .formatToParts(Date.UTC(year, month))
-    .map(({ type, value }) => {
-      switch (type) {
-        case 'month':
-          return <b key={value}>{value}</b>;
-        default:
-          return <React.Fragment key={value}>{value}</React.Fragment>;
-      }
-    })
+    .map(format)
     .reduce((array, part) => [...array, part], []);
 
   const setMonthLoop = (month: number) => {
@@ -110,20 +109,23 @@ export function YearMonthNav({ children }: YearMonthNavProps) {
     setMonth(mod(month, 12));
   };
 
+  const prevMonth = () => setMonthLoop(month - 1);
+  const nextMonth = () => setMonthLoop(month + 1);
+
   return (
     <div className="date-picker__month">
-      <button type="button" onClick={() => setMonthLoop(month - 1)}>
+      <button type="button" onClick={prevMonth}>
         <VisuallyHidden>Previous month</VisuallyHidden>
-        <Arrow style={{ transform: 'rotate(180deg)' }} />
+        <Arrow />
       </button>
       <div>
         {children
-          ? children({ month, year, setMonth, setYear, locale })
-          : monthYear}
+          ? children({ formatedDate, nextMonth, prevMonth })
+          : formatedDate}
       </div>
-      <button type="button" onClick={() => setMonthLoop(month + 1)}>
+      <button type="button" onClick={nextMonth}>
         <VisuallyHidden>Next month</VisuallyHidden>
-        <Arrow />
+        <Arrow style={{ transform: 'rotate(180deg)' }} />
       </button>
     </div>
   );
