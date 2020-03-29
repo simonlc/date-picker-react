@@ -63,6 +63,42 @@ export function Weekdays({ options }: WeekdaysProps) {
   );
 }
 
+interface MonthsFormatOptions {
+  month: 'numeric' | '2-digit' | 'narrow' | 'short' | 'long';
+}
+interface MonthsProps {
+  options?: MonthsFormatOptions;
+  onMonthChange?: (month?: number) => void;
+}
+export function MonthsGrid({ options, onMonthChange }: MonthsProps) {
+  let { setMonth, locale } = useDatePickerContext();
+
+  const months = [...Array(12).keys()].map(index =>
+    new Intl.DateTimeFormat(locale, {
+      timeZone: 'UTC',
+      month: 'long',
+      ...options,
+    }).format(Date.UTC(2020, index + 1, 0)),
+  );
+
+  return (
+    <div className="date-picker__grid--months">
+      {months.map((month: string, index: number) => (
+        <button
+          type="button"
+          key={index}
+          onClick={() => {
+            setMonth(index);
+            onMonthChange && onMonthChange(index);
+          }}
+        >
+          {month}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function Arrow(props: any) {
   return (
     <svg focusable="false" viewBox="0 0 32 32" aria-hidden {...props}>
@@ -266,7 +302,6 @@ export function DatePicker({
   }, [firstWeekday]);
 
   // TODO Set weekStart based on locale
-  // Also have an option weekStart if user does not want to include locale information?
 
   return (
     <DatePickerProvider

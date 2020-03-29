@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 // import { action } from '@storybook/addon-actions';
-import { DatePicker, DayGrid, Weekdays, YearMonthNav } from '../src/datepicker';
+import {
+  DatePicker,
+  DayGrid,
+  Weekdays,
+  MonthsGrid,
+  YearMonthNav,
+} from '../src/datepicker';
 import { LocaleSelector } from '../src/locale-selector';
 import './stories.css';
 
@@ -96,7 +102,11 @@ export const ShowMonths = () => {
         }}
       </YearMonthNav>
       <Weekdays />
-      {showMonths ? 'month picker' : <DayGrid showCompleteWeeks={true} />}
+      {showMonths ? (
+        <MonthsGrid onMonthChange={() => setShowMonths(state => !state)} />
+      ) : (
+        <DayGrid showCompleteWeeks={true} />
+      )}
     </DatePicker>
   );
 };

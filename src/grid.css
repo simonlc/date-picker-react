@@ -41,6 +41,38 @@
   grid-template-columns: repeat(7, 1fr);
 }
 
+.date-picker__grid--months {
+  --gap: 20px 16px;
+  display: grid;
+  grid-gap: var(--gap);
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  padding: 30px 16px;
+}
+
+.date-picker__grid--months button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: initial;
+  -webkit-appearance: none;
+
+  padding: 8px;
+  cursor: pointer;
+  color: var(--color);
+  background: var(--background);
+  transition: background 0.1s cubic-bezier(0, 0, 1, 1);
+  border-radius: 8px;
+}
+
+.date-picker__grid--months button:hover {
+  background: var(--shade-01);
+  transition: background 0.1s cubic-bezier(0, 0, 1, 1);
+}
+
 .date-picker__weekdays {
   align-items: center;
   justify-items: center;
