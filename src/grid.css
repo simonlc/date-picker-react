@@ -17,6 +17,7 @@
   --item-background-selected: var(--pink);
   --item-color-selected: white;
   --box-shadow-focus: 0 0 4px 1px #115bb7;
+  --button-transition: background 0.1s cubic-bezier(0, 0, 1, 1);
 
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
@@ -64,13 +65,12 @@
   cursor: pointer;
   color: var(--color);
   background: var(--background);
-  transition: background 0.1s cubic-bezier(0, 0, 1, 1);
+  transition: var(--button-transition);
   border-radius: 8px;
 }
 
 .date-picker__grid__item-month:hover {
   background: var(--shade-01);
-  transition: background 0.1s cubic-bezier(0, 0, 1, 1);
 }
 
 .date-picker__weekdays {
@@ -107,6 +107,7 @@
   height: 32px;
   border-radius: 99px;
   cursor: pointer;
+  transition: var(--button-transition);
 }
 
 .date-picker__grid__item::before {
