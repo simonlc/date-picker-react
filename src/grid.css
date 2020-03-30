@@ -42,15 +42,15 @@
 }
 
 .date-picker__grid--months {
-  --gap: 20px 16px;
+  --gap: 18px 10px;
   display: grid;
   grid-gap: var(--gap);
   grid-template-columns: repeat(3, 1fr);
   text-align: center;
-  padding: 30px 16px;
+  padding: 20px 0px;
 }
 
-.date-picker__grid--months button {
+.date-picker__grid__item-month {
   font-family: inherit;
   font-size: 100%;
   line-height: 1.15;
@@ -68,7 +68,7 @@
   border-radius: 8px;
 }
 
-.date-picker__grid--months button:hover {
+.date-picker__grid__item-month:hover {
   background: var(--shade-01);
   transition: background 0.1s cubic-bezier(0, 0, 1, 1);
 }

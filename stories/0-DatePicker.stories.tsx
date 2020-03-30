@@ -60,7 +60,7 @@ export const Calendar = () => {
 };
 
 // Click on month to show month picker
-export const ShowMonths = () => {
+export const ShowMonthsToggle = () => {
   const [showMonths, setShowMonths] = useState(false);
   return (
     <DatePicker locale="en" firstWeekday={6}>
@@ -101,56 +101,109 @@ export const ShowMonths = () => {
           return formatedDate;
         }}
       </YearMonthNav>
-      <Weekdays />
       {showMonths ? (
         <MonthsGrid onMonthChange={() => setShowMonths(state => !state)} />
       ) : (
-        <DayGrid showCompleteWeeks={true} />
+        <>
+          <Weekdays />
+          <DayGrid showCompleteWeeks={true} />
+        </>
       )}
     </DatePicker>
   );
 };
 
-export const WeekdaysLocale = () => (
-  <>
-    <DatePicker locale="en">
-      <Weekdays />
+export const MonthPicker = () => {
+  return (
+    <DatePicker locale="en" firstWeekday={6}>
+      <YearMonthNav options={{ year: undefined }} />
+      <MonthsGrid />
     </DatePicker>
-    <DatePicker locale="zh">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="es">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="ar">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="pt">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="id">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="ja">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="ru">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="fr">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="de">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="tr">
-      <Weekdays />
-    </DatePicker>
-    <DatePicker locale="fa">
-      <Weekdays />
-    </DatePicker>
-  </>
-);
+  );
+};
+
+export const WeekdaysLocale = () => {
+  const [weekday, setWeekday] = useState<'narrow' | 'short' | 'long'>('narrow');
+  const onChange = (event: any) => setWeekday(event.target.value);
+  return (
+    <div style={{ display: 'flex' }}>
+      <div>
+        <DatePicker locale="en">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="zh">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="es">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="ar">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="pt">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="id">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="ja">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="ru">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="fr">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="de">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="tr">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+        <DatePicker locale="fa">
+          <Weekdays options={{ weekday }} />
+        </DatePicker>
+      </div>
+      <div>
+        Weekday format
+        <div>
+          <label>
+            <input
+              value="narrow"
+              checked={weekday === 'narrow'}
+              onChange={onChange}
+              type="radio"
+            />
+            Narrow
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              value="short"
+              checked={weekday === 'short'}
+              onChange={onChange}
+              type="radio"
+            />
+            Short
+          </label>
+        </div>
+        {/* <div> */}
+        {/*   <label> */}
+        {/*     <input */}
+        {/*       value="long" */}
+        {/*       checked={weekday === 'long'} */}
+        {/*       onChange={onChange} */}
+        {/*       type="radio" */}
+        {/*     /> */}
+        {/*     long */}
+        {/*   </label> */}
+        {/* </div> */}
+      </div>
+    </div>
+  );
+};
 
 export const Grid = () => {
   return (

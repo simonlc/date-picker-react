@@ -71,7 +71,7 @@ interface MonthsProps {
   onMonthChange?: (month?: number) => void;
 }
 export function MonthsGrid({ options, onMonthChange }: MonthsProps) {
-  let { setMonth, locale } = useDatePickerContext();
+  let { month: currentMonth, setMonth, locale } = useDatePickerContext();
 
   const months = [...Array(12).keys()].map(index =>
     new Intl.DateTimeFormat(locale, {
@@ -85,6 +85,10 @@ export function MonthsGrid({ options, onMonthChange }: MonthsProps) {
     <div className="date-picker__grid--months">
       {months.map((month: string, index: number) => (
         <button
+          className={objstr({
+            'date-picker__grid__item-month': true,
+            'date-picker__grid__item--selected': index === currentMonth,
+          })}
           type="button"
           key={index}
           onClick={() => {
