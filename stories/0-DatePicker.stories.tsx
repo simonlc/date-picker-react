@@ -6,6 +6,7 @@ import {
   Weekdays,
   MonthsGrid,
   YearMonthNav,
+  DateInput,
 } from '../src/datepicker';
 import { LocaleSelector } from '../src/locale-selector';
 import './stories.css';
@@ -218,5 +219,41 @@ export const RtlGrid = () => {
     <DatePicker>
       <DayGrid dir="rtl" />
     </DatePicker>
+  );
+};
+
+function StoryInput(props: any) {
+  return (
+    <label className="story-input">
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32">
+        <g
+          fill="none"
+          stroke="#000"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+        >
+          <path d="M2 6v24h28V6zm0 9h28M7 3v6m6-6v6m6-6v6m6-6v6" />
+        </g>
+      </svg>
+      <DateInput {...props} />
+    </label>
+  );
+}
+
+export const CalendarInput = () => {
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+  const [date, setDate] = useState<string | null | undefined>(null);
+  return (
+    <>
+      <StoryInput onFocus={() => setShowDatePicker(true)} onSubmit={setDate} />
+      {showDatePicker && (
+        <DatePicker locale="en" firstWeekday={6} selectedDate={date}>
+          <YearMonthNav />
+          <Weekdays />
+          <DayGrid showCompleteWeeks={true} />
+        </DatePicker>
+      )}
+    </>
   );
 };

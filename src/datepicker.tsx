@@ -22,8 +22,36 @@ function createCtx<A>() {
   return [useCtx, ctx.Provider] as const; // make TypeScript infer a tuple, not an array of union types
 }
 
+export function DateInput({ onSubmit, ...props }: any) {
+  const [value, setValue] = useState<string>('');
+  const handleKeyPress = (event: any) => {
+    if (event.key === 'Enter') {
+      const newDate = Date.parse(value);
+      if (isNaN(newDate)) {
+        return setValue('');
+      }
+      console.log(new Date(newDate).toISOString().slice(0, 10));
+      onSubmit(new Date(newDate).toISOString().slice(0, 10));
+    }
+  };
+
+  return (
+    <input
+      aria-autocomplete="none"
+      aria-expanded="false"
+      aria-invalid="false"
+      role="combobox"
+      type="text"
+      onKeyPress={handleKeyPress}
+      value={value}
+      onChange={event => setValue(event.target.value)}
+      {...props}
+    />
+  );
+}
+
 interface DatePickerProviderValue {
-  date: string | null;
+  date: string | null | undefined;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   month: number;
   setMonth: React.Dispatch<React.SetStateAction<number>>;
@@ -205,7 +233,7 @@ function Day({
                 'date-picker__grid__item--selected': date === selectedDate,
                 ...className,
               })}
-              key={index}
+              key={date}
               type="button"
               onClick={() => {
                 setDate(date);
@@ -291,19 +319,40 @@ interface DatePickerProps {
   children: React.ReactNode;
   firstWeekday?: number;
   locale?: string;
+  selectedDate?: string | null | undefined;
 }
 export function DatePicker({
   locale = 'en',
   firstWeekday = 6,
   children,
+  selectedDate,
 }: DatePickerProps) {
-  const [date, setDate] = useState<string | null>(null);
+  const [date, setDate] = useState<string | null | undefined>(
+    selectedDate ? selectedDate : null,
+  );
   const [month, setMonth] = useState<number>(0);
   const [year, setYear] = useState<number>(2020);
   const [weekStart, setWeekStart] = useState<number>(firstWeekday);
+
   useLayoutEffect(() => {
     setWeekStart(firstWeekday);
   }, [firstWeekday]);
+
+  useLayoutEffect(() => {
+    if (selectedDate) {
+      const newDate = new Date(selectedDate);
+      setYear(newDate.getUTCFullYear());
+      setMonth(newDate.getUTCMonth());
+      console.log(
+        `${newDate.getUTCFullYear()}-${newDate.getUTCMonth() +
+          1}-${newDate.getUTCDate()}`,
+      );
+      setDate(
+        `${newDate.getUTCFullYear()}-${newDate.getUTCMonth() +
+          1}-${newDate.getUTCDate()}`,
+      );
+    }
+  }, [selectedDate]);
 
   // TODO Set weekStart based on locale
 
