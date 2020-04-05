@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useRect } from '@reach/rect';
 // import { action } from '@storybook/addon-actions';
 import {
   DatePicker,
+  DatePickerPopup,
   DayGrid,
   Weekdays,
   MonthsGrid,
@@ -222,13 +224,13 @@ export const RtlGrid = () => {
   );
 };
 
-function StoryInput(props: any) {
+const StoryInput = React.forwardRef((props: any, ref: any) => {
   return (
-    <label className="story-input">
+    <label ref={ref} className="story-input">
       <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32">
         <g
           fill="none"
-          stroke="#000"
+          stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="2"
@@ -239,21 +241,32 @@ function StoryInput(props: any) {
       <DateInput {...props} />
     </label>
   );
-}
+});
 
 export const CalendarInput = () => {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [date, setDate] = useState<string | null | undefined>(null);
+
+  const ref = useRef(null);
+  const rect = useRect(ref);
+
   return (
     <>
-      <StoryInput onFocus={() => setShowDatePicker(true)} onSubmit={setDate} />
-      {showDatePicker && (
-        <DatePicker locale="en" firstWeekday={6} selectedDate={date}>
-          <YearMonthNav />
-          <Weekdays />
-          <DayGrid showCompleteWeeks={true} />
-        </DatePicker>
-      )}
+      <DatePicker locale="en" firstWeekday={6} selectedDate={date}>
+        <StoryInput
+          ref={ref}
+          onFocus={() => setShowDatePicker(true)}
+          onSubmit={setDate}
+        />
+        {showDatePicker && (
+          <DatePickerPopup rect={rect}>
+            <YearMonthNav />
+            <Weekdays />
+            <DayGrid showCompleteWeeks={true} />
+          </DatePickerPopup>
+        )}
+      </DatePicker>
+      Other content...
     </>
   );
 };

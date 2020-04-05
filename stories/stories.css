@@ -7,17 +7,14 @@ body {
   padding: 10px 13px;
   background: black;
   display: flex;
-  width: 120px;
+  width: 130px;
   border-radius: 6px;
 }
 
 .story-input svg {
   width: 20px;
   margin-top: -1px;
-}
-
-.story-input svg path {
-  stroke: gray;
+  color: gray;
 }
 
 .story-input input {

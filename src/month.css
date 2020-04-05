@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
 
-  margin: 0 -8px 16px;
+  margin: 0 0 16px;
 }
 
 .date-picker__month button {
@@ -32,10 +32,6 @@
 .date-picker__month button:focus {
   outline: 0;
   box-shadow: var(--box-shadow-focus);
-}
-
-.date-picker__month button svg path {
-  stroke: var(--color);
 }
 
 .date-picker__month button img,

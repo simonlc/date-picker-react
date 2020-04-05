@@ -1,0 +1,15 @@
+[data-reach-tooltip] {
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: var(--font);
+  z-index: 1;
+  pointer-events: none;
+  position: absolute;
+  padding: 0.65em 0.9em 0.7em;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  font-size: 85%;
+  background: rgba(220, 220, 220, 0.9);
+  color: #111;
+  border-radius: 8px;
+}

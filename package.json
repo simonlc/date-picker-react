@@ -5,11 +5,15 @@
   "license": "MIT",
   "dependencies": {
     "@reach/descendants": "0.9.1",
+    "@reach/portal": "0.10.0",
+    "@reach/rect": "0.10.0",
+    "@reach/tooltip": "0.9.1",
     "@reach/visually-hidden": "0.9.0",
     "@types/obj-str": "1.0.0",
     "obj-str": "1.0.3",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-spring": "8.0.27"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

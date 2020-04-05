@@ -5,7 +5,8 @@ import React, {
   useLayoutEffect,
 } from 'react';
 import objstr from 'obj-str';
-import VisuallyHidden from '@reach/visually-hidden';
+import { Tooltip } from './tooltip';
+import Portal from '@reach/portal';
 import './grid.css';
 import './month.css';
 import { getFirstDayOfMonth, getDaysInMonth } from '../utils';
@@ -23,7 +24,21 @@ function createCtx<A>() {
 }
 
 export function DateInput({ onSubmit, ...props }: any) {
+  const { locale, date } = useDatePickerContext();
   const [value, setValue] = useState<string>('');
+
+  const dtf = new Intl.DateTimeFormat(locale, {
+    timeZone: 'UTC',
+    day: 'numeric',
+    year: 'numeric',
+    month: 'short',
+  });
+
+  useLayoutEffect(() => {
+    if (date) {
+      setValue(dtf.format(new Date(date)));
+    }
+  }, [date]);
   const handleKeyPress = (event: any) => {
     if (event.key === 'Enter') {
       const newDate = Date.parse(value);
@@ -32,6 +47,15 @@ export function DateInput({ onSubmit, ...props }: any) {
       }
       console.log(new Date(newDate).toISOString().slice(0, 10));
       onSubmit(new Date(newDate).toISOString().slice(0, 10));
+
+      setValue(
+        new Intl.DateTimeFormat(locale, {
+          timeZone: 'UTC',
+          day: 'numeric',
+          year: 'numeric',
+          month: 'short',
+        }).format(new Date(newDate)),
+      );
     }
   };
 
@@ -134,7 +158,12 @@ export function MonthsGrid({ options, onMonthChange }: MonthsProps) {
 function Arrow(props: any) {
   return (
     <svg focusable="false" viewBox="0 0 32 32" aria-hidden {...props}>
-      <g stroke="#000" strokeWidth="2" fill="none" strokeLinecap="round">
+      <g
+        stroke="currentColor"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      >
         <path d="M10 6L2 16l8 10M2 16h28" />
       </g>
     </svg>
@@ -181,19 +210,21 @@ export function YearMonthNav({
 
   return (
     <div className="date-picker__month">
-      <button type="button" onClick={prevMonth}>
-        <VisuallyHidden>Previous month</VisuallyHidden>
-        <Arrow />
-      </button>
+      <Tooltip label="Previous month">
+        <button type="button" onClick={prevMonth}>
+          <Arrow />
+        </button>
+      </Tooltip>
       <div>
         {children
           ? children({ formatedDate, nextMonth, prevMonth })
           : formatedDate}
       </div>
-      <button type="button" onClick={nextMonth}>
-        <VisuallyHidden>Next month</VisuallyHidden>
-        <Arrow style={{ transform: 'rotate(180deg)' }} />
-      </button>
+      <Tooltip label="Next month">
+        <button type="button" onClick={nextMonth}>
+          <Arrow style={{ transform: 'rotate(180deg)' }} />
+        </button>
+      </Tooltip>
     </div>
   );
 }
@@ -316,16 +347,19 @@ export function WeekGrid() {
 }
 
 interface DatePickerProps {
+  // children: React.ReactNode[], React.ReactNode;
   children: React.ReactNode;
   firstWeekday?: number;
   locale?: string;
   selectedDate?: string | null | undefined;
+  onChange?: (date: string) => string;
 }
 export function DatePicker({
   locale = 'en',
   firstWeekday = 6,
   children,
   selectedDate,
+  onChange,
 }: DatePickerProps) {
   const [date, setDate] = useState<string | null | undefined>(
     selectedDate ? selectedDate : null,
@@ -371,5 +405,28 @@ export function DatePicker({
     >
       <div className="date-picker dark">{children}</div>
     </DatePickerProvider>
+  );
+}
+
+export function DatePickerPopup({
+  children,
+  rect,
+}: {
+  children: React.ReactNode;
+  rect: any;
+}) {
+  const offset = 0;
+  return (
+    <Portal>
+      <div
+        style={{
+          top: `${rect.top + offset + rect.height + window.pageYOffset}px`,
+          left: `${rect.left}px`,
+        }}
+        className="date-picker__popup dark"
+      >
+        {children}
+      </div>
+    </Portal>
   );
 }

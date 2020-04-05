@@ -1,10 +1,13 @@
+.date-picker__popup.dark,
 .date-picker.dark {
   --shade-00: black;
   --shade-01: #222;
-  --shade-10: white;
+  --shade-10: #eee;
   --pink: #ff4684;
   --dim: rgba(255, 255, 255, 0.5);
 }
+
+.date-picker__popup,
 .date-picker {
   --shade-00: white;
   --shade-01: #f7f7f7;
@@ -22,23 +25,29 @@
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   font-family: var(--font);
-  padding: 16px 24px;
-  box-shadow: 0 4px 13px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background: var(--background);
   color: var(--color);
-  width: 320px;
 }
 
 .date-picker *:focus:not(:focus-visible) {
   outline: none;
 }
 
+.date-picker__popup {
+  width: 320px;
+  padding: 16px 12px 12px;
+  box-shadow: 0 4px 13px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: var(--background);
+
+  z-index: 1;
+  position: absolute;
+}
+
 .date-picker__weekdays,
 .date-picker__grid {
   --gap: 8px 16px;
   display: grid;
-  grid-gap: var(--gap);
+  /* grid-gap: var(--gap); */
   grid-template-columns: repeat(7, 1fr);
 }
 
@@ -77,7 +86,7 @@
   align-items: center;
   justify-items: center;
   margin-top: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   padding: 2px 0;
   color: var(--dim);
 }
@@ -97,41 +106,47 @@
   border: initial;
   -webkit-appearance: none;
   color: var(--color);
+  background: var(--background);
 
   /* Custom styles */
   display: flex;
-  background: var(--background);
   align-items: center;
   justify-content: center;
+  /*
+  width: 32px;
+  */
+  height: calc(32px + 8px);
+  cursor: pointer;
+
+  position: relative;
+  z-index: 1;
+}
+
+.date-picker__grid__item::after {
+  content: '';
+  position: absolute;
   width: 32px;
   height: 32px;
   border-radius: 99px;
-  cursor: pointer;
   transition: var(--button-transition);
+  z-index: -1;
 }
 
-.date-picker__grid__item::before {
-  content: '';
-  padding-bottom: 100%;
-  display: inline-block;
-  vertical-align: top;
-}
-
-.date-picker__grid__item:hover,
-.date-picker__grid__item:focus {
+.date-picker__grid__item:hover::after,
+.date-picker__grid__item:focus::after {
   background: var(--item-background-hover);
 }
 
 .date-picker__grid__item:focus {
   outline: 0;
-  box-shadow: var(--box-shadow-focus);
+  /* box-shadow: var(--box-shadow-focus); */
 }
 
-.date-picker__grid__item:active {
-  transform: scale(0.99);
+.date-picker__grid__item:active::after {
+  transform: scale(0.95);
 }
 
-.date-picker__grid__item:disabled {
+.date-picker__grid__item:disabled::after {
 }
 
 .date-picker__grid__item--rest-day {
@@ -139,13 +154,21 @@
 }
 
 .date-picker__grid__item--selected {
-  background: var(--item-background-selected);
   color: var(--item-color-selected);
   font-weight: bold;
 }
-.date-picker__grid__item--selected:focus {
+.date-picker__grid__item-month {
+  outline: 0;
+}
+.date-picker__grid__item-month.date-picker__grid__item--selected {
   background: var(--item-background-selected);
 }
-.date-picker__grid__item--selected:hover {
+.date-picker__grid__item--selected::after {
+  background: var(--item-background-selected);
+}
+.date-picker__grid__item--selected:focus::after {
+  background: var(--item-background-selected);
+}
+.date-picker__grid__item--selected:hover::after {
   background: var(--item-background-selected);
 }
