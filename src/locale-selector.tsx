@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 
 interface LocaleSelectorProps {
-  children: (locale: string) => React.ReactNode;
+  children: (
+    locale: string,
+    renderSelect: () => React.ReactNode,
+  ) => React.ReactNode;
 }
 export function LocaleSelector({ children }: LocaleSelectorProps) {
   const [state, setState] = useState('en');
-  return (
-    <div
-      style={{
-        display: 'flex',
-      }}
-    >
-      <div style={{ marginRight: '20px' }}>{children(state)}</div>
+  function renderSelect() {
+    return (
       <select value={state} onChange={event => setState(event.target.value)}>
         <option value="ar">Arabic</option>
         <option value="am">Amharic</option>
@@ -70,6 +68,8 @@ export function LocaleSelector({ children }: LocaleSelectorProps) {
         <option value="zh-CN">Chinese (China)</option>
         <option value="zh-TW">Chinese (Taiwan)</option>
       </select>
-    </div>
-  );
+    );
+  }
+
+  return <>{children(state, renderSelect)}</>;
 }

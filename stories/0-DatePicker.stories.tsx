@@ -27,39 +27,86 @@ export const Calendar = () => {
   return (
     <>
       <LocaleSelector>
-        {locale => (
-          <DatePicker locale={locale} firstWeekday={firstWeekday}>
-            <div className="date-picker__content">
-              <YearMonthNav />
-              <Weekdays />
-              <DayGrid showCompleteWeeks={showCompleteWeeks} />
+        {(locale, renderSelect) => (
+          <div style={{ display: 'flex' }}>
+            <DatePicker locale={locale} firstWeekday={firstWeekday}>
+              <div className="date-picker__content">
+                <YearMonthNav />
+                <Weekdays />
+                <DayGrid showCompleteWeeks={showCompleteWeeks} />
+              </div>
+            </DatePicker>
+            <div style={{ marginLeft: 20 }}>
+              {renderSelect()}
+              <div>
+                <div style={{ marginBottom: 10, marginTop: 20 }}>
+                  <b>First weekday</b>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      value={0}
+                      checked={firstWeekday === 0}
+                      onChange={event =>
+                        setFirstWeekday(Number(event.target.value))
+                      }
+                    />
+                    Monday
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      value={4}
+                      checked={firstWeekday === 4}
+                      onChange={event =>
+                        setFirstWeekday(Number(event.target.value))
+                      }
+                    />
+                    Friday
+                  </label>
+                  <div></div>
+                  <label>
+                    <input
+                      type="radio"
+                      value={5}
+                      checked={firstWeekday === 5}
+                      onChange={event =>
+                        setFirstWeekday(Number(event.target.value))
+                      }
+                    />
+                    Saturday
+                  </label>
+                  <div></div>
+                  <label>
+                    <input
+                      type="radio"
+                      value={6}
+                      checked={firstWeekday === 6}
+                      onChange={event =>
+                        setFirstWeekday(Number(event.target.value))
+                      }
+                    />
+                    Sunday
+                  </label>
+                </div>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <label>
+                  <input
+                    checked={showCompleteWeeks}
+                    onChange={() => setShowCompleteWeeks(state => !state)}
+                    type="checkbox"
+                  />
+                  Show complete weeks
+                </label>
+              </div>
             </div>
-          </DatePicker>
+          </div>
         )}
       </LocaleSelector>
-      <div>
-        <label>
-          First weekday
-          <br />
-          <input
-            type="range"
-            min="0"
-            max="6"
-            value={firstWeekday}
-            onChange={event => setFirstWeekday(Number(event.target.value))}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Show complete weeks
-          <input
-            checked={showCompleteWeeks}
-            onChange={() => setShowCompleteWeeks(state => !state)}
-            type="checkbox"
-          />
-        </label>
-      </div>
     </>
   );
 };
