@@ -216,9 +216,11 @@ export const CalendarInput = () => {
         />
         {showDatePicker && (
           <DatePickerPopup rect={rect}>
-            <YearMonthNav />
-            <Weekdays />
-            <DayGrid showCompleteWeeks={true} />
+            <Stack>
+              <YearMonthNav />
+              <Weekdays />
+              <DayGrid showCompleteWeeks={true} />
+            </Stack>
           </DatePickerPopup>
         )}
       </DatePicker>

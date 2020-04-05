@@ -2,7 +2,7 @@ import React from 'react';
 
 interface StackProps {
   children: React.ReactNode;
-  className: string;
+  className?: string;
   gap?: number;
 }
 
