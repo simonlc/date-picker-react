@@ -88,8 +88,6 @@
 .date-picker__weekdays {
   align-items: center;
   justify-items: center;
-  margin-top: 16px;
-  margin-bottom: 12px;
   padding: 2px 0;
   color: var(--dim);
 }

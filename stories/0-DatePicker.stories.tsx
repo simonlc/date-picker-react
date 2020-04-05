@@ -10,6 +10,7 @@ import {
   YearMonthNav,
   DateInput,
 } from '../src/datepicker';
+import { Stack } from '../src/stack';
 import { LocaleSelector } from '../src/locale-selector';
 import './stories.css';
 
@@ -30,11 +31,11 @@ export const Calendar = () => {
         {(locale, renderSelect) => (
           <div style={{ display: 'flex' }}>
             <DatePicker locale={locale} firstWeekday={firstWeekday}>
-              <div className="date-picker__content">
+              <Stack className="date-picker__content">
                 <YearMonthNav />
                 <Weekdays />
                 <DayGrid showCompleteWeeks={showCompleteWeeks} />
-              </div>
+              </Stack>
             </DatePicker>
             <div style={{ marginLeft: 20 }}>
               {renderSelect()}
@@ -116,7 +117,7 @@ export const ShowMonthsToggle = () => {
   const [showMonths, setShowMonths] = useState(false);
   return (
     <DatePicker locale="en" firstWeekday={6}>
-      <div className="date-picker__content">
+      <Stack className="date-picker__content">
         <YearMonthNav
           format={({ type, value }) => {
             switch (type) {
@@ -162,7 +163,7 @@ export const ShowMonthsToggle = () => {
             <DayGrid showCompleteWeeks={true} />
           </>
         )}
-      </div>
+      </Stack>
     </DatePicker>
   );
 };
@@ -170,15 +171,15 @@ export const ShowMonthsToggle = () => {
 export const MonthPicker = () => {
   return (
     <DatePicker locale="en" firstWeekday={6}>
-      <div className="date-picker__content">
+      <Stack className="date-picker__content">
         <YearMonthNav options={{ year: undefined }} />
         <MonthsGrid />
-      </div>
+      </Stack>
     </DatePicker>
   );
 };
 
-const StoryInput = React.forwardRef((props: any, ref: any) => {
+const StoryInput = React.forwardRef(function StoryInput(props: any, ref: any) {
   return (
     <label ref={ref} className="story-input">
       <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32">
