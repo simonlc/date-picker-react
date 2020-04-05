@@ -28,17 +28,20 @@
   color: var(--color);
 }
 
-.date-picker *:focus:not(:focus-visible) {
-  outline: none;
-}
-
-.date-picker__popup {
+.date-picker__popup,
+.date-picker__content {
   width: 320px;
   padding: 16px 12px 12px;
   box-shadow: 0 4px 13px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   background: var(--background);
+}
 
+.date-picker *:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.date-picker__popup {
   z-index: 1;
   position: absolute;
 }
@@ -106,7 +109,7 @@
   border: initial;
   -webkit-appearance: none;
   color: var(--color);
-  background: var(--background);
+  background: initial;
 
   /* Custom styles */
   display: flex;

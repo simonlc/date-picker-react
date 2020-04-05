@@ -29,9 +29,11 @@ export const Calendar = () => {
       <LocaleSelector>
         {locale => (
           <DatePicker locale={locale} firstWeekday={firstWeekday}>
-            <YearMonthNav />
-            <Weekdays />
-            <DayGrid showCompleteWeeks={showCompleteWeeks} />
+            <div className="date-picker__content">
+              <YearMonthNav />
+              <Weekdays />
+              <DayGrid showCompleteWeeks={showCompleteWeeks} />
+            </div>
           </DatePicker>
         )}
       </LocaleSelector>
@@ -67,51 +69,53 @@ export const ShowMonthsToggle = () => {
   const [showMonths, setShowMonths] = useState(false);
   return (
     <DatePicker locale="en" firstWeekday={6}>
-      <YearMonthNav
-        format={({ type, value }) => {
-          switch (type) {
-            case 'month':
-              return (
-                <button
-                  onClick={() => setShowMonths(state => !state)}
-                  key={value}
-                >
-                  {value}{' '}
-                  <svg
-                    aria-hidden
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    stroke="currentcolor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="3"
-                    style={{ width: '15px' }}
+      <div className="date-picker__content">
+        <YearMonthNav
+          format={({ type, value }) => {
+            switch (type) {
+              case 'month':
+                return (
+                  <button
+                    onClick={() => setShowMonths(state => !state)}
+                    key={value}
                   >
-                    {showMonths ? (
-                      <path d="M30 20 L16 8 2 20" />
-                    ) : (
-                      <path d="M30 12 L16 24 2 12" />
-                    )}
-                  </svg>
-                </button>
-              );
-            default:
-              return <React.Fragment key={value}>{value}</React.Fragment>;
-          }
-        }}
-      >
-        {({ formatedDate }) => {
-          return formatedDate;
-        }}
-      </YearMonthNav>
-      {showMonths ? (
-        <MonthsGrid onMonthChange={() => setShowMonths(state => !state)} />
-      ) : (
-        <>
-          <Weekdays />
-          <DayGrid showCompleteWeeks={true} />
-        </>
-      )}
+                    {value}{' '}
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      stroke="currentcolor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="3"
+                      style={{ width: '15px' }}
+                    >
+                      {showMonths ? (
+                        <path d="M30 20 L16 8 2 20" />
+                      ) : (
+                        <path d="M30 12 L16 24 2 12" />
+                      )}
+                    </svg>
+                  </button>
+                );
+              default:
+                return <React.Fragment key={value}>{value}</React.Fragment>;
+            }
+          }}
+        >
+          {({ formatedDate }) => {
+            return formatedDate;
+          }}
+        </YearMonthNav>
+        {showMonths ? (
+          <MonthsGrid onMonthChange={() => setShowMonths(state => !state)} />
+        ) : (
+          <>
+            <Weekdays />
+            <DayGrid showCompleteWeeks={true} />
+          </>
+        )}
+      </div>
     </DatePicker>
   );
 };
@@ -119,107 +123,10 @@ export const ShowMonthsToggle = () => {
 export const MonthPicker = () => {
   return (
     <DatePicker locale="en" firstWeekday={6}>
-      <YearMonthNav options={{ year: undefined }} />
-      <MonthsGrid />
-    </DatePicker>
-  );
-};
-
-export const WeekdaysLocale = () => {
-  const [weekday, setWeekday] = useState<'narrow' | 'short' | 'long'>('narrow');
-  const onChange = (event: any) => setWeekday(event.target.value);
-  return (
-    <div style={{ display: 'flex' }}>
-      <div>
-        <DatePicker locale="en">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="zh">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="es">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="ar">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="pt">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="id">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="ja">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="ru">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="fr">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="de">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="tr">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
-        <DatePicker locale="fa">
-          <Weekdays options={{ weekday }} />
-        </DatePicker>
+      <div className="date-picker__content">
+        <YearMonthNav options={{ year: undefined }} />
+        <MonthsGrid />
       </div>
-      <div>
-        Weekday format
-        <div>
-          <label>
-            <input
-              value="narrow"
-              checked={weekday === 'narrow'}
-              onChange={onChange}
-              type="radio"
-            />
-            Narrow
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              value="short"
-              checked={weekday === 'short'}
-              onChange={onChange}
-              type="radio"
-            />
-            Short
-          </label>
-        </div>
-        {/* <div> */}
-        {/*   <label> */}
-        {/*     <input */}
-        {/*       value="long" */}
-        {/*       checked={weekday === 'long'} */}
-        {/*       onChange={onChange} */}
-        {/*       type="radio" */}
-        {/*     /> */}
-        {/*     long */}
-        {/*   </label> */}
-        {/* </div> */}
-      </div>
-    </div>
-  );
-};
-
-export const Grid = () => {
-  return (
-    <DatePicker>
-      <DayGrid />
-    </DatePicker>
-  );
-};
-
-export const RtlGrid = () => {
-  return (
-    <DatePicker>
-      <DayGrid dir="rtl" />
     </DatePicker>
   );
 };
@@ -257,6 +164,7 @@ export const CalendarInput = () => {
           ref={ref}
           onFocus={() => setShowDatePicker(true)}
           onSubmit={setDate}
+          placeholder="Date"
         />
         {showDatePicker && (
           <DatePickerPopup rect={rect}>
